@@ -19,7 +19,7 @@ public:
 	MyVector& operator=(const MyVector<T>& copy);
 	~MyVector();
 
-	// для умненьких — реализовать конструктор и оператор для перемещения
+	//реализовать конструктор и оператор для перемещения
 
 	size_t capacity() const;
 	size_t size() const;
