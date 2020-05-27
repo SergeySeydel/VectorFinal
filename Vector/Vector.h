@@ -3,7 +3,7 @@
 
 #pragma once
 
-// СЃС‚СЂР°С‚РµРіРёСЏ РёР·РјРµРЅРµРЅРёСЏ capacity
+// стратегия изменения capacity
 enum class ResizeStrategy {
 	Additive,
 	Multiplicative
@@ -19,53 +19,55 @@ public:
 	MyVector& operator=(const MyVector<T>& copy);
 	~MyVector();
 
-	//СЂРµР°Р»РёР·РѕРІР°С‚СЊ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё РѕРїРµСЂР°С‚РѕСЂ РґР»СЏ РїРµСЂРµРјРµС‰РµРЅРёСЏ
+	// для умненьких — реализовать конструктор и оператор для перемещения
 
 	size_t capacity() const;
 	size_t size() const;
 	
 	float loadFactor();
 
-	// РґРѕСЃС‚СѓРї Рє СЌР»РµРјРµРЅС‚Сѓ, 
-	// РґРѕР»Р¶РµРЅ СЂР°Р±РѕС‚Р°С‚СЊ Р·Р° O(1)
+	// доступ к элементу, 
+	// должен работать за O(1)
 	T& operator[](const size_t i);
 	const T& operator[](const size_t i) const;
 
-	// РґРѕР±Р°РІРёС‚СЊ РІ РєРѕРЅРµС†,
-	// РґРѕР»Р¶РµРЅ СЂР°Р±РѕС‚Р°С‚СЊ Р·Р° amort(O(1))
+	// добавить в конец,
+	// должен работать за amort(O(1))
 	void pushBack(const T& value);
-	// РІСЃС‚Р°РІРёС‚СЊ,
-	// РґРѕР»Р¶РµРЅ СЂР°Р±РѕС‚Р°С‚СЊ Р·Р° O(n)
-	void insert(const size_t i, const T& value);	// РІРµСЂСЃРёСЏ РґР»СЏ РѕРґРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
-	void insert(const size_t i, const MyVector& value);	// РІРµСЂСЃРёСЏ РґР»СЏ РІРµРєС‚РѕСЂР°
+	// вставить,
+	// должен работать за O(n)
+	void insert(const size_t i, const T& value);	// версия для одного значения
+	void insert(const size_t i, const MyVector& value);	// версия для вектора
 
-	// СѓРґР°Р»РёС‚СЊ СЃ РєРѕРЅС†Р°,
-	// РґРѕР»Р¶РµРЅ СЂР°Р±РѕС‚Р°С‚СЊ Р·Р° amort(O(1))
+	// удалить с конца,
+	// должен работать за amort(O(1))
 	void popBack();
-	// СѓРґР°Р»РёС‚СЊ
-	// РґРѕР»Р¶РµРЅ СЂР°Р±РѕС‚Р°С‚СЊ Р·Р° O(n)
+	// удалить
+	// должен работать за O(n)
 	void erase(const size_t i);
-	void erase(const size_t i, const size_t len);			// СѓРґР°Р»РёС‚СЊ len СЌР»РµРјРµРЅС‚РѕРІ РЅР°С‡РёРЅР°СЏ СЃ i
+	void erase(const size_t i, const size_t len);			// удалить len элементов начиная с i
 
-	// РЅР°Р№С‚Рё СЌР»РµРјРµРЅС‚,
-	// РґРѕР»Р¶РµРЅ СЂР°Р±РѕС‚Р°С‚СЊ Р·Р° O(n)
-	// РµСЃР»Рё isBegin == true, РЅР°Р№С‚Рё РёРЅРґРµРєСЃ РїРµСЂРІРѕРіРѕ СЌР»РµРјРµРЅС‚Р°, СЂР°РІРЅРѕРіРѕ value, РёРЅР°С‡Рµ РїРѕСЃР»РµРґРЅРµРіРѕ
-	// РµСЃР»Рё РёСЃРєРѕРјРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РЅРµС‚, РІРµСЂРЅСѓС‚СЊ -1
+	// найти элемент,
+	// должен работать за O(n)
+	// если isBegin == true, найти индекс первого элемента, равного value, иначе последнего
+	// если искомого элемента нет, вернуть -1
 	long long int find(const T& value, bool isBegin = true) const;
 
-	// Р·Р°СЂРµР·РµСЂРІРёСЂРѕРІР°С‚СЊ РїР°РјСЏС‚СЊ (РїСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕ Р·Р°РґР°С‚СЊ capacity)
+	// зарезервировать память (принудительно задать capacity)
 	void reserve(const size_t capacity);
 
-	// РёР·РјРµРЅРёС‚СЊ СЂР°Р·РјРµСЂ
-	// РµСЃР»Рё РЅРѕРІС‹Р№ СЂР°Р·РјРµСЂ Р±РѕР»СЊС€Рµ С‚РµРєСѓС‰РµРіРѕ, С‚Рѕ РЅРѕРІС‹Рµ СЌР»РµРјРµРЅС‚С‹ Р·Р°Р±РёРІР°СЋС‚СЃСЏ РґРµС„РѕР»С‚РЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё
-	// РµСЃР»Рё РјРµРЅСЊС€Рµ - РѕР±СЂРµР·Р°РµРј РІРµРєС‚РѕСЂ
+	// изменить размер
+	// если новый размер больше текущего, то новые элементы забиваются дефолтными значениями
+	// если меньше - обрезаем вектор
 	void resize(const size_t size);
 
-	// РѕС‡РёСЃС‚РєР° РІРµРєС‚РѕСЂР°, Р±РµР· РёР·РјРµРЅРµРЅРёСЏ capacity
+	// очистка вектора, без изменения capacity
 	void clear();
 private:
-	// РР·РјРµРЅРµРЅРёСЏ capacity, РїСѓС‚С‘Рј Р·Р°РїСЂРѕСЃР° РЅР° РґРѕР±Р°РІР»РµРЅРёРµ num РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ. РџСЂРё num = 0 РёРґРµС‚ Рї
+	// Изменения capacity, путём запроса на добавление num дополнительных элементов. При num = 0 идет п
 	void CalcCapacity(const int num = 0);
+
+	void decreasecapacity();
 
 	T* _data;
 	size_t _size;
@@ -185,7 +187,7 @@ inline void MyVector<T>::erase(const size_t i, const size_t len)
 		_data[j] = _data[j + len];
 	}
 	_size -= len;
-	CalcCapacity();
+	decreasecapacity();
 }
 
 
@@ -199,7 +201,7 @@ inline void MyVector<T>::CalcCapacity(const int num)
 			reserve(_capacity + _delta);
 			break;
 		case ResizeStrategy::Multiplicative:
-			// РСЃРїРѕР»СЊР·СѓСЋ max, С‚Р°Рє РєР°Рє РµСЃР»Рё coef РјРµРЅСЊС€Рµ РґРІСѓС…, С‚Рѕ РјРѕР¶РµС‚ РЅРµ РёР·РјРµРЅРёС‚СЊСЃСЏ СЂР°Р·РјРµСЂ. 1 * 1.5 = 1
+			// Использую max, так как если coef меньше двух, то может не измениться размер. 1 * 1.5 = 1
 			if (_capacity * _coef == _capacity) {
 				reserve(_capacity + 1);
 			}
@@ -211,10 +213,25 @@ inline void MyVector<T>::CalcCapacity(const int num)
 			break;
 		}
 	}
-	if (loadFactor() <= 0.25) {
-		reserve(capacity() / 2);
+	
+}
+
+template<typename T>
+inline void MyVector<T>::decreasecapacity()
+{
+	while (loadFactor() <= 1 / (_coef * _coef)) {
+		int new_capacity = _capacity / _coef;
+		T* ndata = new T[new_capacity];
+		for (int i = 0; i < _size; i++) {
+			ndata[i] = _data[i];
+		}
+		delete[] _data;
+		_capacity = new_capacity;
+		_data = ndata;
 	}
 }
+
+
 
 
 
@@ -224,14 +241,14 @@ inline void MyVector<T>::popBack()
 	if (_size == 0)
 		throw std::runtime_error("Vector subscript out of range");
 	_size--;
-	CalcCapacity();
+	decreasecapacity();
 }
 
 
 template<typename T>
 inline void MyVector<T>::resize(const size_t size)
 {
-	// РњРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРµ, С‚РѕРіРґР° РЅРёС‡РµРіРѕ РЅРµ РїСЂРѕРёР·РѕР№РґРµС‚ РІ CalcCapacity, РёРЅР°С‡Рµ Р·Р°РїСЂРѕСЃРёС‚СЃСЏ РїР°РјСЏС‚СЊ РЅР° РґРѕРї СЌР»РµРјРµРЅС‚С‹
+	// Может быть отрицательное, тогда ничего не произойдет в CalcCapacity, иначе запросится память на доп элементы
 	CalcCapacity(size - _size);
 	for (int i = _size; i < size; i++) {
 		_data[i] = 0;
