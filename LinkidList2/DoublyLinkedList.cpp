@@ -10,7 +10,7 @@ DoublyLinkedList::Node::Node(const ValueType& value, Node* next, Node* prev)
 
 DoublyLinkedList::Node::~Node()
 {
-	// ничего не удаляем, т.к. агрегация
+	// РЅРёС‡РµРіРѕ РЅРµ СѓРґР°Р»СЏРµРј, С‚.Рє. Р°РіСЂРµРіР°С†РёСЏ
 }
 
 void DoublyLinkedList::Node::insertNext(const ValueType& value)
