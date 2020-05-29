@@ -3,6 +3,8 @@
 
 #pragma once
 
+using namespace std;
+
 // стратегия изменения capacity
 enum class ResizeStrategy {
 	Additive,
@@ -19,7 +21,7 @@ public:
 	MyVector& operator=(const MyVector<T>& copy);
 	~MyVector();
 
-	//реализовать конструктор и оператор для перемещения
+	// для умненьких — реализовать конструктор и оператор для перемещения
 
 	size_t capacity() const;
 	size_t size() const;
@@ -63,6 +65,8 @@ public:
 
 	// очистка вектора, без изменения capacity
 	void clear();
+
+	const T& Front() const;
 private:
 	// Изменения capacity, путём запроса на добавление num дополнительных элементов. При num = 0 идет п
 	void CalcCapacity(const int num = 0);
@@ -76,6 +80,7 @@ private:
 	float _coef;
 	int _delta;
 };
+
 
 template<typename T>
 inline MyVector<T>::MyVector(size_t size, ResizeStrategy r, float coef, int delta)
@@ -263,6 +268,15 @@ inline void MyVector<T>::clear()
 	_size = 0;
 }
 
+template<typename T>
+inline const T& MyVector<T>::Front() const
+{
+	if (size() > 0) {
+		return _data[_size - 1];
+	}
+	throw new exception("index error");
+}
+
 
 
 
@@ -333,4 +347,3 @@ inline MyVector<T>& MyVector<T>::operator=(const MyVector<T>& copy)
 		_data[i] = copy._data[i];
 	}
 }
-
